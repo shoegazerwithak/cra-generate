@@ -1,22 +1,20 @@
-// @flow
+"use strict";
 
-"use strict"
+const caseTransform = require("./case-transform");
+const getConfig = require("../config");
+const templates = require("../templates");
+const io = require("./io");
 
-const caseTransform = require("./case-transform")
-const getConfig = require("../config")
-const templates = require("../templates")
-const io = require("./io")
+module.exports = function generate(component, options = {}) {
+  options = getConfig(options);
 
-module.exports = function generate(component: string, options = {}) {
-  options = getConfig(options)
-
-  const fileName = caseTransform(component, options.fileFormat)
-  const componentName = caseTransform(component, options.componentFormat)
+  const fileName = caseTransform(component, options.fileFormat);
+  const componentName = caseTransform(component, options.componentFormat);
   const componentPath = io.getComponentPath(
     componentName,
     options.directory,
     fileName
-  )
+  );
 
   const files = templates(options.typeCheck || "")({
     fileName,
@@ -25,12 +23,16 @@ module.exports = function generate(component: string, options = {}) {
     noTest: !options.test,
     isFunctional: options.isFunctional,
     semiColon: options.semi ? ";" : "",
-    cssExtension: options.cssExtension.replace(/^\./, ""),
-  })
-
+    cssExtension: options.cssExtension.replace(/^\./, "")
+  });
+  const native =
+    options.typeCheck === "native" || options.typeCheck === "react-native";
   for (const file of files) {
-    io.writeToDisk(file.filePath, file.content)
+    if (native && file.filePath.endsWith("css")) {
+    } else {
+      io.writeToDisk(file.filePath, file.content);
+    }
   }
 
-  return { componentName, componentPath, files }
-}
+  return { componentName, componentPath, files };
+};
