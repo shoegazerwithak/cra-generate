@@ -66,7 +66,6 @@ export default ${componentName}${semiColon}
       : `
 import React, { Component } from 'react'${semiColon}
 import {
-//   AppRegistry,
   StyleSheet,
   Text,
   View
@@ -91,7 +90,6 @@ const styles = StyleSheet.create({
   container: {
   },
 })${semiColon}
-// AppRegistry.registerComponent('${componentName}', () => ${componentName} )${semiColon}
 export default ${componentName}${semiColon}
   `,
   })
